@@ -1,36 +1,43 @@
-# employee-portal
+# employee-portal with REST API's
 
-#Build the project
-#Java version required 1.8
-#Spring Boot 2.1.8.RELEASE
-#MongoDb 4.0.12 or above 
-#Maven 3.0.4 or above
-#checkout and run the following command in employee-portal folder
-mvn clean install
+## Software requirements
+- Java version 1.8
+- Spring Boot 2.1.8.RELEASE
+- MongoDb 4.0.12 or above 
+- Maven 3.0.4 or above
 
-#For executing unit tests run the following command in employee-portal folder
-mvn test
+## Build the project
+checkout and run the following command in employee-portal folder
+- mvn clean install
 
-#Set application configuration details in employee-portal/src/main/resources/application.properties
-#server port for listening by default it is 8080
-server.port=8080
+For executing unit tests run the following command in employee-portal folder
+- mvn test
 
-#Set mongoDB connection details for persistence
-#by default following values are set 
-spring.data.mongodb.host=localhost
-spring.data.mongodb.port=27017
-spring.data.mongodb.database=employeesDB
+Set application configuration details in employee-portal/src/main/resources/application.properties
 
-#Set log configuration properties in employee-portal/src/main/resources/log4j2.properties
-#by default logging will be done in employee-portal/logs/employeePortal.log
+configure server port by default it is 8080
+- server.port=8080
 
-#To launch the sever execute following command in employee-portal folder
-java -jar target/employee-portal-0.0.1-SNAPSHOT.jar
+Set mongoDB connection details for persistence
 
-#To add an employee send following REST request along with JSON body as sample provided below
+by default following values are set 
 
-POST http://localhost:8080/employees/
+- spring.data.mongodb.host=localhost
+- spring.data.mongodb.port=27017
+- spring.data.mongodb.database=employeesDB
 
+Set log configuration properties in employee-portal/src/main/resources/log4j2.properties
+
+by default logging will be done in employee-portal/logs/employeePortal.log
+
+To launch the sever execute following command in employee-portal folder
+
+- java -jar target/employee-portal-0.0.1-SNAPSHOT.jar
+
+To add an employee send following REST request along with JSON body as sample provided below
+
+- POST http://localhost:8080/employees/
+```
 Body
 
 {
@@ -55,11 +62,11 @@ Body
     "dateOfBirth": "01-10-1981",
     "department": "Foundation Engg"
 }
+```
+Update an employee send following REST request along with JSON body as sample provided below
 
-#Update an employee send following REST request along with JSON body as sample provided below
-
-PUT http://localhost:8080/employees/{Employee Id}
-
+- PUT http://localhost:8080/employees/{Employee Id}
+```
 Body
 
 {
@@ -72,11 +79,11 @@ Body
 
 response:
 HTTP status code - 200
+```
+Get All employees send following REST request as sample provided below
 
-#Get All employees send following REST request as sample provided below
-
-GET http://localhost:8080/employees/
-
+- GET http://localhost:8080/employees/
+```
 response:
 HTTP status code - 200
 
@@ -100,11 +107,11 @@ Body
         "department": "Marketing"
     }
 ]
+```
+Get single employee send following REST request as sample provided below
 
-#Get single employee send following REST request as sample provided below
-
-GET http://localhost:8080/employees/{Id}
-
+- GET http://localhost:8080/employees/{Id}
+```
 response:
 
 HTTP status code - 200
@@ -119,14 +126,12 @@ Body
     "dateOfBirth": "01-10-1981",
     "department": "Foundation Engg"
 }
+```
+To remove an employee send following REST request as sample provided below
 
-#To remove an employee send following REST request as sample provided below
-
-DELETE http://localhost:8080/employees/{Id}
-
+- DELETE http://localhost:8080/employees/{Id}
+```
 response:
 
 HTTP status code - 200
-
-
-
+```
