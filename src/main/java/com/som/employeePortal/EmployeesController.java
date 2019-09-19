@@ -8,11 +8,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.som.employeePortal.models.Employee;
@@ -39,8 +43,8 @@ public class EmployeesController {
 	 * @return the all employees
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public List<Employee> getAllEmployees() {
-		return repository.findAll();
+	public List<Employee> getAllEmployees(@RequestParam(defaultValue = "0", required = false) Integer pageId, @RequestParam(defaultValue = "10", required = false) Integer count) {
+		return repository.findAll(PageRequest.of(pageId, count, Sort.by("firstName"))).getContent();
 	}
 
 	/**

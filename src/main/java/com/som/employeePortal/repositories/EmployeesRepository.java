@@ -1,5 +1,7 @@
 package com.som.employeePortal.repositories;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

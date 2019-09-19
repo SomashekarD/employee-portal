@@ -20,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -283,9 +287,9 @@ public class EmployeesControllerTest {
 	}
 	
 	@Test
-	public void getAllEmployees() throws JSONException, JsonParseException, JsonMappingException, IOException {
+	public void getAllEmployeesSortedByFirstName() throws JSONException, JsonParseException, JsonMappingException, IOException {
 
-		String employeeFirstInJson = "{\"firstName\":\"Deepash\", \"lastName\":\"Rao\", \"gender\":\"M\", \"dateOfBirth\":\"01-05-1983\", \"department\":\"Finance\"}";
+		String employeeFirstInJson = "{\"firstName\":\"Sujan\", \"lastName\":\"Kumar\", \"gender\":\"M\", \"dateOfBirth\":\"01-07-1985\", \"department\":\"HR\"}";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -293,14 +297,12 @@ public class EmployeesControllerTest {
 
 		ResponseEntity<String> response = restTemplate.postForEntity("/employees/", entity, String.class);
 
-		String expectedJson = "{\"firstName\":\"Deepash\",\"lastName\":\"Rao\",\"gender\":\"M\",\"dateOfBirth\":\"01-05-1983\",\"department\":\"Finance\"}";
-
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		JSONAssert.assertEquals(expectedJson, response.getBody(), false);
+		JSONAssert.assertEquals(employeeFirstInJson, response.getBody(), false);
 
 		Employee empOne = new ObjectMapper().readValue(response.getBody(), Employee.class);
 		
-		String employeeSecondInJson = "{\"firstName\":\"Sujan\", \"lastName\":\"Kumar\", \"gender\":\"M\", \"dateOfBirth\":\"01-07-1985\", \"department\":\"HR\"}";
+		String employeeSecondInJson = "{\"firstName\":\"Deepash\", \"lastName\":\"Rao\", \"gender\":\"M\", \"dateOfBirth\":\"01-05-1983\", \"department\":\"Finance\"}";
 		
 		headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -308,10 +310,8 @@ public class EmployeesControllerTest {
 		
 		response = restTemplate.postForEntity("/employees/", entity, String.class);
 		
-		expectedJson = "{\"firstName\":\"Sujan\", \"lastName\":\"Kumar\", \"gender\":\"M\", \"dateOfBirth\":\"01-07-1985\", \"department\":\"HR\"}";
-		
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		JSONAssert.assertEquals(expectedJson, response.getBody(), false);
+		JSONAssert.assertEquals(employeeSecondInJson, response.getBody(), false);
 		
 		Employee empSecond = new ObjectMapper().readValue(response.getBody(), Employee.class);
 
@@ -321,14 +321,16 @@ public class EmployeesControllerTest {
 		employeeList.add(empOne);
 		employeeList.add(empSecond);
 		
-		when(mockRepository.findAll()).thenReturn(employeeList);
+		Page<Employee> empLoyeePages = new PageImpl<>(employeeList);
+		
+		when(mockRepository.findAll(PageRequest.of(0, 10, Sort.by("firstName")))).thenReturn(empLoyeePages);
 		response = restTemplate.exchange("/employees/", HttpMethod.GET, null, String.class);
 		
-		expectedJson = "[{\"firstName\":\"Deepash\", \"lastName\":\"Rao\", \"gender\":\"M\", \"dateOfBirth\":\"01-05-1983\", \"department\":\"Finance\"},"
+		String expectedJson = "[{\"firstName\":\"Deepash\", \"lastName\":\"Rao\", \"gender\":\"M\", \"dateOfBirth\":\"01-05-1983\", \"department\":\"Finance\"},"
 				+ "{\"firstName\":\"Sujan\", \"lastName\":\"Kumar\", \"gender\":\"M\", \"dateOfBirth\":\"01-07-1985\", \"department\":\"HR\"}]";
 		
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		JSONAssert.assertEquals(expectedJson, response.getBody(), false);
-		verify(mockRepository, times(1)).findAll();
+		verify(mockRepository, times(1)).findAll(PageRequest.of(0, 10, Sort.by("firstName")));
 	}
 }
