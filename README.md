@@ -80,9 +80,9 @@ Body
 response:
 HTTP status code - 200
 ```
-Get All employees send following REST request as sample provided below
+Get All employees will fetch employees sorted on first name with pagination by default page 0 and 10 items. Send following REST request as sample provided below to get page 0 and 2 items. 
 
-- GET http://localhost:8080/employees/
+- GET http://localhost:8080/employees/?pageId=0&count=2
 ```
 response:
 HTTP status code - 200
